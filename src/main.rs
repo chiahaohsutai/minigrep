@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::{env, fs, process};
 
 struct Config {
@@ -16,6 +17,13 @@ impl Config {
     }
 }
 
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    println!("With text: {contents}");
+    Ok(())
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::build(&args).unwrap_or_else(|err| {
@@ -28,8 +36,8 @@ fn main() {
         config.query, config.file_path
     );
 
-    let contents =
-        fs::read_to_string(config.file_path).expect("Failed to read the file at path: {filepath}");
-
-    println!("With text: {contents}");
+    if let Err(e) = run(config) {
+        println!("Application exited with errors: {e}");
+        process::exit(1);
+    }
 }
