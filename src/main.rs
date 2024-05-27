@@ -1,9 +1,6 @@
 use minigrep::Config;
 use std::{env, process};
 
-// To run (case-insensitive):
-// IGNORE_CASE=1 cargo run -- to sample.txt
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::build(&args).unwrap_or_else(|err| {
