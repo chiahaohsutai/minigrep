@@ -6,11 +6,13 @@ use std::{env, process};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let config = Config::build(&args).unwrap_or_else(|_| {
+    let config = Config::build(&args).unwrap_or_else(|err| {
+        eprint!("Problem parsing arguments: {err}");
         process::exit(1);
     });
 
-    if let Err(_) = minigrep::run(config) {
+    if let Err(e) = minigrep::run(config) {
+        eprint!("Application error {e}");
         process::exit(1);
     }
 }
